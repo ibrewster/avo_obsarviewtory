@@ -47,7 +47,7 @@ if __name__ == "__main__":
     # TODO: Watch name defaults to 'name', so it will NEVER be "0". Ask about the logic here.
     if watch_name != 0:
         jobs = hyp3.find_jobs(name=watch_name)
-        jobs = hyp3.watch(jobs) # wait until asf has processed all submitted requests
+        jobs = hyp3.watch(jobs) # wait until asf has processed all submitted requests. May be several hours.
 
 
     for volcano in config.volcano_list:
@@ -59,8 +59,13 @@ if __name__ == "__main__":
             mintpy_directory = analysis_directory / 'MintPy'
             print(f"analysis_directory: {analysis_directory}")
 
+            # Will be a gdal merge command with full_scene and merge_paths
+            # TODO: run using python bindings
             gdal_command = avo_insar_functions.avo_insar_download( hyp3 , volcano.asf_name , analysis_directory , volcano.filter_dates)
+
             full_scene = analysis_directory/"full_scene.tif"
+
+            # this is slightly redundant, but better safe than sorry.
             if full_scene.exists():
                 full_scene.unlink()
 
@@ -71,6 +76,9 @@ if __name__ == "__main__":
             avo_insar_functions.avo_insar_crop(image_file, volcano.ul, volcano.lr, analysis_directory)
 
             mintpy_config = avo_insar_functions.avo_insar_run( analysis_directory , mintpy_directory )
+            # TODO: Figure out what this is
             #!smallbaselineApp.py --dir {mintpy_directory} {mintpy_config}
+
+            # TODO: run this using python libraries rather than command line
             clean_command = f"rm -rf {analysis_directory}/S1*"
             #!clean_command
