@@ -17,6 +17,8 @@ import hyp3_sdk as sdk
 def avo_insar_download( hyp3, asf_name , analysis_directory , filter_dates ):
 # download project {asf_name} into {analysis_directory}
     jobs = hyp3.find_jobs(name=asf_name)
+    
+    # TODO: What if no jobs returned?
     print(f"\nProject: {jobs.jobs[0].name}")
     project_zips = jobs.download_files(analysis_directory) # download
     for z in project_zips:
@@ -34,7 +36,7 @@ def avo_insar_download( hyp3, asf_name , analysis_directory , filter_dates ):
     if len(filter_dates) > 0: # remove bad dates
         for filter_date in filter_dates:
             remove_date = analysis_directory / filter_date
-            shutil.rmtree(remove_date)
+            shutil.rmtree(remove_date, ignore_errors = True) #Don't get hung up if we can't remove something
 
     for pattern in ["xml","png","kmz","md.txt"]:
         unneeded_files = analysis_directory.glob(f"S1*/*.{pattern}") # remove files not needed for processing
@@ -52,13 +54,14 @@ def avo_insar_download( hyp3, asf_name , analysis_directory , filter_dates ):
         full_scene.unlink()
     gdal_command = f"gdal_merge.py -o {full_scene} {merge_paths}"
 
-    return(gdal_command) # I have to return this and run it in the notebook because I cannot run bash commands inside a function definition
+    return (full_scene, amp)
+    #return(gdal_command) # I have to return this and run it in the notebook because I cannot run bash commands inside a function definition
 
 
 def avo_insar_crop( image_file , ul , lr , analysis_directory ):
 # crop downloaded files; these two functions are seperated because I have to run a bash command between them
     img = gdal.Open(image_file)
-    rasterstack = img.ReadAsArray()
+    img.ReadAsArray()
 
     fnames = list(analysis_directory.glob('*/*.tif'))
     fnames.sort()

@@ -1,9 +1,13 @@
+import os
+
+from osgeo import gdal
+
 try:
     # Module
-    from . import config, avo_insar_functions
+    from . import config, avo_insar_functions, gdal_merge
 except ImportError:
     # Script
-    import config, avo_insar_functions
+    import config, avo_insar_functions, gdal_merge
 
 
 import hyp3_sdk as sdk
@@ -11,7 +15,8 @@ from pathlib import Path
 
 
 if __name__ == "__main__":
-    flags = [] # this variable records if a project should be updated
+    no_update = [] # this variable records if a project should be updated
+    watch_name = None
     #hyp3 = sdk.HyP3('https://hyp3-avo.asf.alaska.edu', prompt=True, username='ycheng', password='earthdata+1S')
     hyp3 = sdk.HyP3(prompt=True, username='ycheng', password='earthdata+1S')
 
@@ -24,28 +29,34 @@ if __name__ == "__main__":
             hyp3
         ) # this function checks updates AND submit requests to ASF
 
-        flags.append( asf_flag ) # save the status: can be updated?
+        if asf_flag:
+            # We requested an update of something, so mark that we need to watch for it to finish.
+            watch_name = asf_project.asf_name
+        else:
+            # We only need to run this if the flag is 0, since the flag defaults to 1
+            for volc in config.volc_lookup[asf_project.asf_name]:
+                volc.update_flag(asf_flag)            
+            
+        #flags.append( asf_flag ) # save the status: can be updated?
 
         # TODO: Isn't the flag just a 1 or a 0?
         asf_project.update_date(asf_flag)
 
-
-    watch_name = 'name' # this variable records an asf_name
-    # TODO: make this a dictionary lookup
-    for i in range(len(flags)):
-        # There is one flag per item in the asf_list, so the first loop here
-        # associates the flag with the index of the item in the asf_list
-        for volcano in config.volcano_list:
-            # Go through the list of volcanoes, and find the one(s) where the asf_name
-            # item in the volcano item matches this asf item, so we can update the
-            # flag on that item.
-            if volcano.asf_name == config.asf_list[i].asf_name:
-                volcano.update_flag( flags[i] )
-        if flags[i] == 1:
-            watch_name = config.asf_list[i].asf_name # always save the lastly-submitted project for watch
+        
+    # for i in range(len(flags)):
+        # # There is one flag per item in the asf_list, so the first loop here
+        # # associates the flag with the index of the item in the asf_list
+        # for volcano in config.volcano_list:
+            # # Go through the list of volcanoes, and find the one(s) where the asf_name
+            # # item in the volcano item matches this asf item, so we can update the
+            # # flag on that item.
+            # if volcano.asf_name == config.asf_list[i].asf_name:
+                # volcano.update_flag( flags[i] )
+        # if flags[i] == 1:
+            # watch_name = config.asf_list[i].asf_name # always save the lastly-submitted project for watch
 
     # TODO: Watch name defaults to 'name', so it will NEVER be "0". Ask about the logic here.
-    if watch_name != 0:
+    if watch_name is not None:
         jobs = hyp3.find_jobs(name=watch_name)
         jobs = hyp3.watch(jobs) # wait until asf has processed all submitted requests. May be several hours.
 
@@ -61,16 +72,20 @@ if __name__ == "__main__":
 
             # Will be a gdal merge command with full_scene and merge_paths
             # TODO: run using python bindings
-            gdal_command = avo_insar_functions.avo_insar_download( hyp3 , volcano.asf_name , analysis_directory , volcano.filter_dates)
-
-            full_scene = analysis_directory/"full_scene.tif"
+            full_scene, merge_paths = avo_insar_functions.avo_insar_download( hyp3 , volcano.asf_name , analysis_directory , volcano.filter_dates)
 
             # this is slightly redundant, but better safe than sorry.
             if full_scene.exists():
                 full_scene.unlink()
-
-            #!{gdal_command}
+            
+            merge_args = ['gdal_merge.py','-o', str(full_scene)] + [str(x) for x in merge_paths]
+            gdal_merge.main(merge_args)
             image_file = f"{analysis_directory}/raster_stack.vrt"
+            if os.path.exists(image_file):
+                os.unlink(image_file)
+            
+            vrt_options = gdal.BuildVRTOptions(separate = True)
+            gdal.BuildVRT(image_file, [str(full_scene), ], options = vrt_options)
             #!gdalbuildvrt -separate $image_file -overwrite $full_scene
 
             avo_insar_functions.avo_insar_crop(image_file, volcano.ul, volcano.lr, analysis_directory)
