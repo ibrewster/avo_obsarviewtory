@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 class volcano_area: # this stores needed information for locating a volcano area and processing it
-    def __init__(self, volc_name, ul, lr, path, frame, asf_name, run_flag):
+    def __init__(self, volc_name, ul, lr, path, frame, asf_name, run_flag = 1):
         self.volc_name = volc_name # if aoi contains >1 volcanoes, label volc_name would only be one of them
         self.filter_dates = filter_dates.get((volc_name,path), []) # bad dates to skip (e.g. shifted-frame scenes)
         self.ul = ul # [x,y] aoi information, satellite coordinates of upper-left conner
@@ -61,7 +61,7 @@ filter_dates = {
         "S1AB_20160913T173714_20161013T173638_VVP030_INT80_G_weF_D66A",
         "S1BB_20161013T173638_20161106T173638_VVP024_INT80_G_weF_B9C9"
     ],
-    
+
     ('kiska',30): [
         "S1AA_20180624T181853_20180811T181855_VVP048_INT80_G_ueF_219B",
         "S1AA_20180706T181853_20180811T181855_VVP036_INT80_G_ueF_0CA3",
@@ -72,13 +72,13 @@ filter_dates = {
         "S1AA_20180811T181855_20180916T181857_VVP036_INT80_G_ueF_2E1B",
         "S1AA_20180811T181855_20180928T181857_VVP048_INT80_G_ueF_B216"
     ],
-    
+
     ('akutan',44): [
         "S1AA_20181104T172032_20181116T172032_VVP012_INT80_G_weF_F5C6",
         "S1AB_20160915T172019_20161015T171938_VVP030_INT80_G_weF_55A6",
         "S1BB_20161015T171938_20161108T171937_VVP024_INT80_G_weF_3EFB",
     ],
-    
+
     ('okmok',44): [
         'S1AA_20160424T172039_20160518T172040_VVP024_INT80_G_weF_ED6C',
         'S1AA_20160424T172039_20160611T172042_VVP048_INT80_G_weF_521D',
@@ -148,12 +148,12 @@ filter_dates = {
         'S1AA_20220429T172116_20220616T172119_VVP048_INT80_G_weF_F749',
         'S1AA_20220429T172116_20220827T172123_VVP120_INT80_G_weF_AD63'
     ],
-    
+
     ('edgecumbe',50): [
         'S1AA_20230719T170441_20230731T170442_VVR012_INT80_G_weF_B020',
         'S1AA_20220817T170438_20230731T170442_VVR348_INT80_G_weF_6563'
     ],
-    
+
     ('takawangha',59): [
         "S1AA_20171005T180224_20181012T180231_VVP372_INT80_G_weF_9A18",
         "S1AA_20180322T180221_20180930T180230_VVP192_INT80_G_weF_A509",
@@ -167,7 +167,7 @@ filter_dates = {
         "S1AA_20181105T180230_20181129T180230_VVP024_INT80_G_weF_2D20",
         "S1AA_20181117T180230_20181129T180230_VVP012_INT80_G_weF_3A87"
     ],
-    
+
     ('kanaga',59): [
         "S1AA_20171005T180224_20181012T180231_VVP372_INT80_G_weF_9A18",
         "S1AA_20180322T180221_20180930T180230_VVP192_INT80_G_weF_A509",
@@ -181,7 +181,7 @@ filter_dates = {
         "S1AA_20181105T180230_20181129T180230_VVP024_INT80_G_weF_2D20",
         "S1AA_20181117T180230_20181129T180230_VVP012_INT80_G_weF_3A87"
     ],
-    
+
     ('amak',73): [
         "S1AA_20141010T170317_20141103T170318_VVP024_INT80_G_weF_CA5D",
         "S1AA_20141010T170317_20141127T170317_VVP048_INT80_G_weF_06B8",
@@ -202,7 +202,7 @@ filter_dates = {
         "S1AA_20150806T170322_20150830T170340_VVP024_INT80_G_weF_5128",
         "S1AA_20150806T170322_20150923T170341_VVP048_INT80_G_weF_BC61"
     ],
-    
+
     ('pavlof',73): [
         "S1AA_20141010T170317_20141103T170318_VVP024_INT80_G_weF_CA5D",
         "S1AA_20141010T170317_20141127T170317_VVP048_INT80_G_weF_06B8",
@@ -232,7 +232,7 @@ filter_dates = {
         "S1AB_20160917T170345_20161017T170247_VVP030_INT80_G_weF_9FD6",
         "S1BA_20161017T170247_20181106T170350_VVP750_INT80_G_weF_669E"
     ],
-    
+
     ('unimak',73): [
         "S1AA_20150408T170343_20150502T170345_VVP024_INT80_G_weF_4DE3",
         "S1AA_20150713T170348_20150806T170349_VVP024_INT80_G_weF_71B1",
@@ -255,7 +255,7 @@ filter_dates = {
         "S1AA_20150619T170347_20150806T170349_VVP048_INT80_G_weF_39DA",
         "S1AA_20150923T170341_20151017T170341_VVP024_INT80_G_weF_04E9"
     ],
-    
+
     ('edgecumbe',79): [
         'S1AA_20170305T023738_20170410T023739_VVP036_INT80_G_weF_CF4F',
         'S1AA_20170305T023738_20170422T023740_VVP048_INT80_G_weF_6DEA',
@@ -293,7 +293,7 @@ filter_dates = {
         'S1AA_20221204T023818_20230202T023815_VVR060_INT80_G_weF_1868',
         'S1AA_20230226T023815_20230310T023815_VVP012_INT80_G_weF_DA04'
     ],
-    
+
     ('ukinrek',102): [
         "S1AA_20150317T164607_20150410T164608_VVP024_INT80_G_weF_BE7F",
         "S1AA_20150528T164611_20150621T164612_VVP024_INT80_G_weF_D572",
@@ -324,86 +324,86 @@ filter_dates = {
         "S1AA_20160615T164612_20160802T164615_VVP048_INT80_G_weF_7F6D",
         "S1AB_20160919T164617_20161019T164539_VVP030_INT80_G_weF_CC7F"
     ],
-    
+
     ('cleveland',117): [
         "S1BB_20161020T172817_20161113T172817_VVP024_INT80_G_weF_4D7D"
     ],
-    
+
     ('vsevidof',117): [
         "S1BB_20161020T172817_20161113T172817_VVP024_INT80_G_weF_4D7D"
-    ],    
+    ],
 }
 
 # order: volc_name, filter_dates, ul, lr, path, frame, asf_name, run_flag
+# Coordinates are in UTM projection.
+seguam15 = volcano_area('seguam',[388200,5806000],[411800,5789000],15,419,'015_421')
+chagulak15 = volcano_area('chagulak',[478400,5826500],[492200,5810900],15,419,'015_421')
+yunaska15 = volcano_area('yunaska',[510200,5837500],[530200,5821300],15,419,'015_421')
 
-seguam15 = volcano_area('seguam',[388200,5806000],[411800,5789000],15,419,'015_421',1)
-chagulak15 = volcano_area('chagulak',[478400,5826500],[492200,5810900],15,419,'015_421',1)
-yunaska15 = volcano_area('yunaska',[510200,5837500],[530200,5821300],15,419,'015_421',1)
+kiska30 = volcano_area('kiska',[513500,5776800],[548600,5741000],30,420,'st_semisopochnoi_real')
+davidof30 = volcano_area('davidof',[574600,5768000],[609300,5750700],30,420,'st_semisopochnoi_real')
+semisopochnoi30 = volcano_area('semisopochnoi',[669600,5767700],[690700,5750000],30,420,'st_semisopochnoi_real')
 
-kiska30 = volcano_area('kiska',[513500,5776800],[548600,5741000],30,420,'st_semisopochnoi_real',1)
-davidof30 = volcano_area('davidof',[574600,5768000],[609300,5750700],30,420,'st_semisopochnoi_real',1)
-semisopochnoi30 = volcano_area('semisopochnoi',[669600,5767700],[690700,5750000],30,420,'st_semisopochnoi_real',1)
+makushin41044 = volcano_area('makushin410',[355800,5987000],[428600,5930000],44,410,'044_410')
+akutan44 = volcano_area('akutan',[427000,6009000],[475000,5987000],44,410,'044_410')
+westdahl44 = volcano_area('westdahl',[503000,6093000],[564000,6026700],44,410,'044_410')
 
-makushin41044 = volcano_area('makushin410',[355800,5987000],[428600,5930000],44,410,'044_410',1)
-akutan44 = volcano_area('akutan',[427000,6009000],[475000,5987000],44,410,'044_410',1)
-westdahl44 = volcano_area('westdahl',[503000,6093000],[564000,6026700],44,410,'044_410',1)
+okmok44 = volcano_area('okmok',[271300,5940000],[315800,5903000],44,415,'044_415')
+makushin41544 = volcano_area('makushin415',[309000,5976000],[426800,5903000],44,415,'044_415')
 
-okmok44 = volcano_area('okmok',[271300,5940000],[315800,5903000],44,415,'044_415',1)
-makushin41544 = volcano_area('makushin415',[309000,5976000],[426800,5903000],44,415,'044_415',1)
+edgecumbe50 = volcano_area('edgecumbe',[446764,6356464],[459347,6315619],50,182,'050_182')
 
-edgecumbe50 = volcano_area('edgecumbe',[446764,6356464],[459347,6315619],50,182,'050_182',1)
+gareloi59 = volcano_area('gareloi',[370600,5744700],[380500,5734000],59,420,'059_419')
+takawangha59 = volcano_area('takawangha',[415000,5753200],[457400,5716100],59,420,'059_419')
+kanaga59 = volcano_area('kanaga',[451000,5755000],[496800,5722500],59,420,'059_419')
+moffett59 = volcano_area('moffett',[500600,5762000],[540000,5715000],59,420,'059_419')
+greatsitkin59 = volcano_area('greatsitkin',[554000,5774600],[570000,5757000],59,420,'059_419')
 
-gareloi59 = volcano_area('gareloi',[370600,5744700],[380500,5734000],59,420,'059_419',1)
-takawangha59 = volcano_area('takawangha',[415000,5753200],[457400,5716100],59,420,'059_419',1)
-kanaga59 = volcano_area('kanaga',[451000,5755000],[496800,5722500],59,420,'059_419',1)
-moffett59 = volcano_area('moffett',[500600,5762000],[540000,5715000],59,420,'059_419',1)
-greatsitkin59 = volcano_area('greatsitkin',[554000,5774600],[570000,5757000],59,420,'059_419',1)
+amak73 = volcano_area('amak',[230000,6151500],[273000,6094000],73,407,'073_407')
+pavlof73 = volcano_area('pavlof',[276000,6206000],[390000,6101000],73,407,'073_407')
 
-amak73 = volcano_area('amak',[230000,6151500],[273000,6094000],73,407,'073_407',1)
-pavlof73 = volcano_area('pavlof',[276000,6206000],[390000,6101000],73,407,'073_407',1)
+unimak73 = volcano_area('unimak',[565700,6102000],[626000,6052000],73,412,'073_412')
 
-unimak73 = volcano_area('unimak',[565700,6102000],[626000,6052000],73,412,'073_412',1)
+edgecumbe79 = volcano_area('edgecumbe',[448000,6355000],[467000,6317500],79,186,'079_186')
 
-edgecumbe79 = volcano_area('edgecumbe',[448000,6355000],[467000,6317500],79,186,'079_186',1)
+kiska81 = volcano_area('kiska',[513500,5776500],[548800,5741000],81,166,'081_166')
+davidof81 = volcano_area('davidof',[574400,5777700],[609500,5750700],81,166,'081_166')
+semisopochnoi81 = volcano_area('semisopochnoi',[669700,5767500],[690600,5750000],81,166,'081_166')
 
-kiska81 = volcano_area('kiska',[513500,5776500],[548800,5741000],81,166,'081_166',1)
-davidof81 = volcano_area('davidof',[574400,5777700],[609500,5750700],81,166,'081_166',1)
-semisopochnoi81 = volcano_area('semisopochnoi',[669700,5767500],[690600,5750000],81,166,'081_166',1)
+atka88 = volcano_area('atka',[232000,5813000],[366500,5766000],88,418,'088_418')
+seguam88 = volcano_area('seguam',[388400,5806000],[411500,5789600],88,418,'088_418')
 
-atka88 = volcano_area('atka',[232000,5813000],[366500,5766000],88,418,'088_418',1)
-seguam88 = volcano_area('seguam',[388400,5806000],[411500,5789600],88,418,'088_418',1)
+ukinrek102 = volcano_area('ukinrek',[620000,6460000],[680000,6406000],102,397,'102_397')
+martin102 = volcano_area('martin',[670000,6476000],[736500,6403000],102,397,'102_397')
+trident102 = volcano_area('trident',[697100,6476800],[752800,6426700],102,397,'102_397')
+katmai102 = volcano_area('katmai',[700000,6505000],[766000,6440000],102,397,'102_397')
 
-ukinrek102 = volcano_area('ukinrek',[620000,6460000],[680000,6406000],102,397,'102_397',1)
-martin102 = volcano_area('martin',[670000,6476000],[736500,6403000],102,397,'102_397',1)
-trident102 = volcano_area('trident',[697100,6476800],[752800,6426700],102,397,'102_397',1)
-katmai102 = volcano_area('katmai',[700000,6505000],[766000,6440000],102,397,'102_397',1)
+aniakchak102 = volcano_area('aniakchak',[500000,6357000],[659000,6250000],102,402,'102_402')
+blue102 = volcano_area('blue',[600000,6400000],[675000,6377000],102,402,'102_402')
 
-aniakchak102 = volcano_area('aniakchak',[500000,6357000],[659000,6250000],102,402,'102_402',1)
-blue102 = volcano_area('blue',[600000,6400000],[675000,6377000],102,402,'102_402',1)
+buldir103 = volcano_area('buldir',[421000,5805000],[430200,5798800],103,419,'103_419')
+kiska103 = volcano_area('kiska',[513000,5777000],[593900,5741500],103,419,'103_419')
 
-buldir103 = volcano_area('buldir',[421000,5805000],[430200,5798800],103,419,'103_419',1)
-kiska103 = volcano_area('kiska',[513000,5777000],[593900,5741500],103,419,'103_419',1)
+cleveland117 = volcano_area('cleveland',[555000,5882600],[589900,5841000],117,417,'117_417')
+vsevidof117 = volcano_area('vsevidof',[626300,5940000],[713200,5854300],117,417,'117_417')
 
-cleveland117 = volcano_area('cleveland',[555000,5882600],[589900,5841000],117,417,'117_417',1)
-vsevidof117 = volcano_area('vsevidof',[626300,5940000],[713200,5854300],117,417,'117_417',1)
+spurr131 = volcano_area('spurr',[495000,6840000],[590000,6690000],131,388,'spurr')
 
-spurr131 = volcano_area('spurr',[495000,6840000],[590000,6690000],131,388,'spurr',1)
+augustine131 = volcano_area('augustine',[467000,6587000],[480800,6575500],131,393,'131_393')
+redoubt131 = volcano_area('redoubt',[482579,6728984],[544694,6635304],131,393,'131_393')
 
-augustine131 = volcano_area('augustine',[467000,6587000],[480800,6575500],131,393,'131_393',1)
-redoubt131 = volcano_area('redoubt',[482579,6728984],[544694,6635304],131,393,'131_393',1)
+snowy131 = volcano_area('snowy',[392635,6485168],[442269,6429478],131,398,'131_398')
+knob131 = volcano_area('knob',[401149,6511651],[434126,6484394],131,398,'131_398')
+kaguyak131 = volcano_area('kaguyak',[430231,6549376],[485921,6482697],131,398,'131_398')
 
-snowy131 = volcano_area('snowy',[392635,6485168],[442269,6429478],131,398,'131_398',1)
-knob131 = volcano_area('knob',[401149,6511651],[434126,6484394],131,398,'131_398',1)
-kaguyak131 = volcano_area('kaguyak',[430231,6549376],[485921,6482697],131,398,'131_398',1)
+buldir154 = volcano_area('buldir',[421000,5804900],[430700,5798800],154,166,'154_166')
+kiska154 = volcano_area('kiska',[513200,5776800],[581500,5741800],154,166,'154_166')
 
-buldir154 = volcano_area('buldir',[421000,5804900],[430700,5798800],154,166,'154_166',1)
-kiska154 = volcano_area('kiska',[513200,5776800],[581500,5741800],154,166,'154_166',1)
+moffett161 = volcano_area('moffett',[500300,5761700],[540100,5715500],161,418,'161_418')
+greatsitkin161 = volcano_area('greatsitkin',[553800,5774700],[570700,5757700],161,418,'161_418')
+atka161 = volcano_area('atka',[600600,5812000],[705200,5763000],161,418,'161_418')
 
-moffett161 = volcano_area('moffett',[500300,5761700],[540100,5715500],161,418,'161_418',1)
-greatsitkin161 = volcano_area('greatsitkin',[553800,5774700],[570700,5757700],161,418,'161_418',1)
-atka161 = volcano_area('atka',[600600,5812000],[705200,5763000],161,418,'161_418',1)
-
-veniaminof102 = volcano_area('veniaminof',[467500,6253000],[526900,6203000],102,407,'102_407',1)
+veniaminof102 = volcano_area('veniaminof',[467500,6253000],[526900,6203000],102,407,'102_407')
 
 # user can add their own volcano processings here, just define them first
 volcano_list = [seguam15, chagulak15, yunaska15, \

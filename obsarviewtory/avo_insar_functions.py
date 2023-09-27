@@ -17,8 +17,9 @@ import hyp3_sdk as sdk
 def avo_insar_download( hyp3, asf_name , analysis_directory , filter_dates ):
 # download project {asf_name} into {analysis_directory}
     jobs = hyp3.find_jobs(name=asf_name)
-    
-    # TODO: What if no jobs returned?
+    if not jobs:
+        return []
+
     print(f"\nProject: {jobs.jobs[0].name}")
     project_zips = jobs.download_files(analysis_directory) # download
     for z in project_zips:
@@ -43,18 +44,19 @@ def avo_insar_download( hyp3, asf_name , analysis_directory , filter_dates ):
         for file in unneeded_files:
             file.unlink()
 
-    amp = list(analysis_directory.glob(f'*/*_amp.tif'))
-    merge_paths = ""
+    #amp = list(analysis_directory.glob(f'*/*_amp.tif'))
+    # merge_paths = ""
 
-    for pth in amp:
-        merge_paths = f"{merge_paths} {pth}"
+    # for pth in amp:
+        # merge_paths = f"{merge_paths} {pth}"
 
-    full_scene = analysis_directory/"full_scene.tif" # create a full scene for cropping
-    if full_scene.exists():
-        full_scene.unlink()
-    gdal_command = f"gdal_merge.py -o {full_scene} {merge_paths}"
+    # full_scene = analysis_directory/"full_scene.tif" # create a full scene for cropping
+    # if full_scene.exists():
+        # full_scene.unlink()
 
-    return (full_scene, amp)
+    # gdal_command = f"gdal_merge.py -o {full_scene} {merge_paths}"
+
+    #return amp
     #return(gdal_command) # I have to return this and run it in the notebook because I cannot run bash commands inside a function definition
 
 
@@ -69,7 +71,7 @@ def avo_insar_crop( image_file , ul , lr , analysis_directory ):
     for i, fname in enumerate(fnames):
         clip = fname.parent/f"{fname.stem}_clip.tif"
         gdal.Translate(destName=str(clip), srcDS=str(fname), projWin=[ul[0], ul[1], lr[0], lr[1]])
-        gdal.Warp(str(clip), str(clip), dstSRS='EPSG:4326', dstNodata=0)
+        #gdal.Warp(str(clip), str(clip), dstSRS='EPSG:4326', dstNodata=0)
         fname.unlink()
 
     fnames = list(analysis_directory.glob('*/*.tif*'))
@@ -153,8 +155,9 @@ def check_project_update( asf_name , record_dates ):
 def update_asf_project( path, frame, asf_name, hyp3):
 # update the given project {asf_name}
     jobs = hyp3.find_jobs(name=asf_name)
+    if not jobs:
+        return -1
 
-    # TODO: how to handle no jobs - some random min date?
     last_date = max( asfn.get_job_dates(jobs) )
     last_date = parse_date(last_date).date()
 
