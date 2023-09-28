@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 class volcano_area: # this stores needed information for locating a volcano area and processing it
-    def __init__(self, volc_name, ul, lr, path, frame, asf_name, run_flag = 1):
+    def __init__(self, volc_name, ul, lr, path, frame, asf_name, run_flag = 0):
         self.volc_name = volc_name # if aoi contains >1 volcanoes, label volc_name would only be one of them
         self.filter_dates = filter_dates.get((volc_name,path), []) # bad dates to skip (e.g. shifted-frame scenes)
         self.ul = ul # [x,y] aoi information, satellite coordinates of upper-left conner
@@ -484,16 +484,18 @@ path131_398 = asf_area('131_398',131,398,'20230301')
 path154_166 = asf_area('154_166',154,166,'20230303')
 path161_418 = asf_area('161_418',161,418,'20230303')
 
-asf_list = [path15_419,path30_420,path44_410,path44_415,path50_182,
-            path59_420,path73_407,path73_412,path79_186,path81_166,
-                path88_418,path102_397,path102_402,
-                path102_407,
-                path103_419,
-                path117_417,path131_388,path131_393,path131_398,
-                path154_166,path161_418]
+asf_list = [
+    path15_419,path30_420,path44_410,path44_415,path50_182,
+    path59_420,path73_407,path73_412,path79_186,path81_166,
+    path88_418,path102_397,path102_402,
+    path102_407,
+    path103_419,
+    path117_417,path131_388,path131_393,path131_398,
+    path154_166,path161_418
+]
 
 ###### DEBUG/TESTING #####
-asf_list = [path50_182, path81_166]
+asf_list = [path44_410, path50_182, path81_166]
 
 # with open('data/asflist.pkl', 'wb') as f:
     # pickle.dump(asf_list, f)

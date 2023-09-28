@@ -14,7 +14,7 @@ import asf_search as asf
 import hyp3_sdk as sdk
 
 
-def avo_insar_download( hyp3, asf_name , analysis_directory , filter_dates ):
+def avo_insar_download( hyp3: sdk.HyP3, asf_name: str , analysis_directory: Path , filter_dates: list ):
 # download project {asf_name} into {analysis_directory}
     jobs = hyp3.find_jobs(name=asf_name)
     if not jobs:
@@ -43,21 +43,6 @@ def avo_insar_download( hyp3, asf_name , analysis_directory , filter_dates ):
         unneeded_files = analysis_directory.glob(f"S1*/*.{pattern}") # remove files not needed for processing
         for file in unneeded_files:
             file.unlink()
-
-    #amp = list(analysis_directory.glob(f'*/*_amp.tif'))
-    # merge_paths = ""
-
-    # for pth in amp:
-        # merge_paths = f"{merge_paths} {pth}"
-
-    # full_scene = analysis_directory/"full_scene.tif" # create a full scene for cropping
-    # if full_scene.exists():
-        # full_scene.unlink()
-
-    # gdal_command = f"gdal_merge.py -o {full_scene} {merge_paths}"
-
-    #return amp
-    #return(gdal_command) # I have to return this and run it in the notebook because I cannot run bash commands inside a function definition
 
 
 def avo_insar_crop( image_file , ul , lr , analysis_directory ):
@@ -156,6 +141,7 @@ def update_asf_project( path, frame, asf_name, hyp3):
 # update the given project {asf_name}
     jobs = hyp3.find_jobs(name=asf_name)
     if not jobs:
+        print(f"No jobs found for {asf_name}")
         return -1
 
     last_date = max( asfn.get_job_dates(jobs) )
@@ -169,60 +155,65 @@ def update_asf_project( path, frame, asf_name, hyp3):
         processingLevel='SLC',
         start = '1 month ago'
     )
+    
+    if len(search_results) < 1:
+        print('An ASF search problem has occurred. Check failed at project '+asf_name+'.')
+        return( -1 )        
 
-    if len(search_results)>1:
-        #TODO: Handle errors with stack (ValueError No products found matching stack parameters, requests.exceptions.JSONDecodeError, etc)
+    try:
         baseline_results = search_results[-1].stack()
-        if len(baseline_results)==0:
-            print('An ASF search problem has occurred. Check failed at project '+asf_name+'.')
-            return( -1 )
-
-        columns = list(baseline_results[0].properties.keys()) + ['geometry', ] # these lines extract search result
-        data = [list(scene.properties.values()) + [scene.geometry, ] for scene in baseline_results]
-        stack = pd.DataFrame(data, columns=columns)
-        stack['startTime'] = stack.startTime.apply(parse_date)
-
-        new_date = stack.startTime.iloc[-1].date()
-        delta_date = new_date-last_date
-
-        if delta_date.days>4:
-            sbas_pairs = set()
-            newstack = stack.loc[( pd.Timestamp(last_date+timedelta(days=-2),tz='UTC') <= stack.startTime) & (stack.startTime <= pd.Timestamp(new_date+timedelta(days=2),tz='UTC') )]
-            for reference, rt in newstack.loc[::-1, ['sceneName', 'temporalBaseline']].itertuples(index=False):
-                secondaries = newstack.loc[
-                    (newstack.sceneName != reference)
-                    & (newstack.temporalBaseline - rt <= 48) # 48 for max temporal baseline
-                    & (newstack.temporalBaseline - rt > 0)
-                ]
-                for secondary in secondaries.sceneName:
-                    sbas_pairs.add((reference, secondary))
-
-            last_year_time  = pd.Timestamp(new_date + timedelta(days=-365), tz='UTC')
-            last_year_scene = stack.iloc[(stack['startTime'] - last_year_time).abs().idxmin()]
-            new_time = pd.Timestamp(new_date, tz='UTC')
-            new_scene = stack.iloc[(stack['startTime'] - new_time).abs().idxmin()]
-            sbas_pairs.add((last_year_scene['sceneName'], new_scene['sceneName']))
-
-            sbas_pairs_list = list()
-            for tuple_name in sbas_pairs:
-                sbas_pairs_list.append(list(tuple_name))
-
-            jobs = sdk.Batch()
-            for reference, secondary in sbas_pairs_list:
-                jobs += hyp3.submit_insar_job(reference, secondary, name=asf_name,
-                                              include_dem=True, include_look_vectors=True,
-                                              include_inc_map=True, include_displacement_maps=True,
-                                              apply_water_mask=True)
-            print(f"Updated ASF project submitted for {asf_name}. Your new subset contains {len(sbas_pairs)} more pairs:")
-            for line in sbas_pairs_list:
-                print('        '+line[0][17:25]+'_'+line[1][17:25])
-            return( 1 )
-        else:
-            print('    The project '+asf_name+' is up to date.')
-            return( 0 )
-    else: # when len(search_results)==0
+    except Exception as e:
+        print(f"An ASF search problem has occurred ({e}) Check failed at project {asf_name}.")
+        return -1
+        
+    if len(baseline_results)==0:
         print('An ASF search problem has occurred. Check failed at project '+asf_name+'.')
         return( -1 )
+
+    columns = list(baseline_results[0].properties.keys()) + ['geometry', ] # these lines extract search result
+    data = [list(scene.properties.values()) + [scene.geometry, ] for scene in baseline_results]
+    stack = pd.DataFrame(data, columns=columns)
+    stack['startTime'] = stack.startTime.apply(parse_date)
+
+    new_date = stack.startTime.iloc[-1].date()
+    delta_date = new_date-last_date
+
+    if delta_date.days>4:
+        sbas_pairs = set()
+        newstack = stack.loc[( pd.Timestamp(last_date+timedelta(days=-2),tz='UTC') <= stack.startTime) & (stack.startTime <= pd.Timestamp(new_date+timedelta(days=2),tz='UTC') )]
+        for reference, rt in newstack.loc[::-1, ['sceneName', 'temporalBaseline']].itertuples(index=False):
+            secondaries = newstack.loc[
+                (newstack.sceneName != reference)
+                & (newstack.temporalBaseline - rt <= 48) # 48 for max temporal baseline
+                & (newstack.temporalBaseline - rt > 0)
+            ]
+            for secondary in secondaries.sceneName:
+                sbas_pairs.add((reference, secondary))
+
+        last_year_time  = pd.Timestamp(new_date + timedelta(days=-365), tz='UTC')
+        last_year_scene = stack.iloc[(stack['startTime'] - last_year_time).abs().idxmin()]
+        new_time = pd.Timestamp(new_date, tz='UTC')
+        new_scene = stack.iloc[(stack['startTime'] - new_time).abs().idxmin()]
+        sbas_pairs.add((last_year_scene['sceneName'], new_scene['sceneName']))
+
+        sbas_pairs_list = list()
+        for tuple_name in sbas_pairs:
+            sbas_pairs_list.append(list(tuple_name))
+
+        jobs = sdk.Batch()
+        for reference, secondary in sbas_pairs_list:
+            jobs += hyp3.submit_insar_job(reference, secondary, name=asf_name,
+                                          include_dem=True, include_look_vectors=True,
+                                          include_inc_map=True, include_displacement_maps=True,
+                                          apply_water_mask=True)
+        print(f"Updated ASF project submitted for {asf_name}. Your new subset contains {len(sbas_pairs)} more pairs:")
+        for line in sbas_pairs_list:
+            print('        '+line[0][17:25]+'_'+line[1][17:25])
+        return( 1 )
+    else:
+        print('    The project '+asf_name+' is up to date.')
+        return( 0 )
+
 
 def avo_insar_difg( hyp3, asf_name , analysis_directory , date_range ):
 # download interferograms within {date_range} from project {asf_name} into {analysis_directory}

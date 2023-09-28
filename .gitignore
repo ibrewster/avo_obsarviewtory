@@ -1,2 +1,8 @@
+*.wpu
+.ipynb_checkpoints
+products
+id_rsa
+env
+test
 __pycache__
 .DS_Store
