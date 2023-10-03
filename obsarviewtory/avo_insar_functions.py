@@ -39,10 +39,10 @@ def avo_insar_download( hyp3: sdk.HyP3, asf_name: str , analysis_directory: Path
             remove_date = analysis_directory / filter_date
             shutil.rmtree(remove_date, ignore_errors = True) #Don't get hung up if we can't remove something
 
-    for pattern in ["xml","png","kmz","md.txt"]:
-        unneeded_files = analysis_directory.glob(f"S1*/*.{pattern}") # remove files not needed for processing
-        for file in unneeded_files:
-            file.unlink()
+    # for pattern in ["xml","png","kmz","md.txt"]:
+        # unneeded_files = analysis_directory.glob(f"S1*/*.{pattern}") # remove files not needed for processing
+        # for file in unneeded_files:
+            # file.unlink()
 
 
 def avo_insar_crop( image_file , ul , lr , analysis_directory ):
@@ -155,17 +155,17 @@ def update_asf_project( path, frame, asf_name, hyp3):
         processingLevel='SLC',
         start = '1 month ago'
     )
-    
+
     if len(search_results) < 1:
         print('An ASF search problem has occurred. Check failed at project '+asf_name+'.')
-        return( -1 )        
+        return( -1 )
 
     try:
         baseline_results = search_results[-1].stack()
     except Exception as e:
         print(f"An ASF search problem has occurred ({e}) Check failed at project {asf_name}.")
         return -1
-        
+
     if len(baseline_results)==0:
         print('An ASF search problem has occurred. Check failed at project '+asf_name+'.')
         return( -1 )
