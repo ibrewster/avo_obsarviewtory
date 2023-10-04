@@ -3,7 +3,6 @@ import numpy as np
 import asf_notebook as asfn
 
 from osgeo import gdal
-import shutil
 from pathlib import Path
 
 import pandas as pd
@@ -14,7 +13,7 @@ import asf_search as asf
 import hyp3_sdk as sdk
 
 
-def avo_insar_download( hyp3: sdk.HyP3, asf_name: str , analysis_directory: Path , filter_dates: list ):
+def avo_insar_download( hyp3: sdk.HyP3, asf_name: str , analysis_directory: Path):
 # download project {asf_name} into {analysis_directory}
     jobs = hyp3.find_jobs(name=asf_name)
     if not jobs:
@@ -26,23 +25,17 @@ def avo_insar_download( hyp3: sdk.HyP3, asf_name: str , analysis_directory: Path
         asfn.asf_unzip(str(analysis_directory), str(z)) # unzip
         z.unlink()
 
-#     ifg download has become an function itself
-#     color_files = analysis_directory.glob(f"S1*/*2023*color_phase.kmz")
-#     color_files_list = list(color_files)
-#     color_dir = analysis_directory/"colorphase"
-#     color_dir.mkdir(exist_ok=True)
-#     for file in color_files_list:
-#         file.rename(color_dir / file.name) # move color phase interferograms
+    # Bad dates are removed when copying the downloaded files into the 
+    # working directory.
+    # if len(filter_dates) > 0: # remove bad dates
+        # for filter_date in filter_dates:
+            # remove_date = analysis_directory / filter_date
+            # shutil.rmtree(remove_date, ignore_errors = True) #Don't get hung up if we can't remove something
 
-    if len(filter_dates) > 0: # remove bad dates
-        for filter_date in filter_dates:
-            remove_date = analysis_directory / filter_date
-            shutil.rmtree(remove_date, ignore_errors = True) #Don't get hung up if we can't remove something
-
-    # for pattern in ["xml","png","kmz","md.txt"]:
-        # unneeded_files = analysis_directory.glob(f"S1*/*.{pattern}") # remove files not needed for processing
-        # for file in unneeded_files:
-            # file.unlink()
+    for pattern in ["xml","png","md.txt"]:
+        unneeded_files = analysis_directory.glob(f"S1*/*.{pattern}") # remove files not needed for processing
+        for file in unneeded_files:
+            file.unlink()
 
 
 def avo_insar_crop( image_file , ul , lr , analysis_directory ):

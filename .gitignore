@@ -1,5 +1,6 @@
 *.wpu
 .ipynb_checkpoints
+processings
 products
 id_rsa
 env
