@@ -29,10 +29,9 @@ pip install numpy
 pip install --no-cache-dir --no-binary pykdtree -r requirements.txt
 ```
 
-::: Note
-[!IMPORTANT]
-numpy *does* need to be installed seperately _first_, otherwise gdal will not build/install correctly. The `--no-cache-dir` flag is used to make sure the version of gdal installed isn't a cached version _without_ numpy support, and the `--no-binary pykdtree` flag ensures that pykdtree is built with OpenMP support. Depending on your enviroment, these two flags may not be needed.
-:::
+
+> [!IMPORTANT]
+> numpy *does* need to be installed seperately _first_, otherwise gdal will not build/install correctly. The `--no-cache-dir` flag is used to make sure the version of gdal installed isn't a cached version _without_ numpy support, and the `--no-binary pykdtree` flag ensures that pykdtree is built with OpenMP support. Depending on your enviroment, these two flags may not be needed.
 
 > [!NOTE]
 > If installing on an Apple Silicon machine, pygrib may need to be built from source as well, using the following command:
