@@ -1,3 +1,4 @@
+*.wpr
 *.wpu
 .ipynb_checkpoints
 processings
