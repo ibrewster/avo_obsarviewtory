@@ -184,5 +184,4 @@ asf_list = [
     path154_166,path161_418
 ]
 
-###### DEBUG/TESTING #####
-asf_list = [path44_410, path50_182, path81_166]
+

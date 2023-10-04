@@ -166,8 +166,8 @@ class InSARProcessor:
             ###########DEBUG######
             # To process ALL volcanoes, regardless of ASF project status
             # uncomment the following two lines:
-            #if asf_flag == 0:
-            #    asf_flag = 1
+            if asf_flag == 0:
+                asf_flag = 1
             ######################
 
             if asf_flag > 0:
@@ -248,7 +248,6 @@ class InSARProcessor:
                 # parallel, the rest of the function is for when 
                 # parallel processing is desired
                 # Pick one or the other, not both :)
-
                 #-------- Single processing ---------------#
                 #success, result = self.run_mintpy(volcano, proj_downloads)
                 # if success:

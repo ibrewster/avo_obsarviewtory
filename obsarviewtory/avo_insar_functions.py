@@ -1,6 +1,11 @@
 ## import packages
 import numpy as np
-import asf_notebook as asfn
+try:
+    # Running as a script
+    import asf_notebook as asfn
+except ImportError:
+    # running as a module
+    from . import asf_notebook as asfn
 
 from osgeo import gdal
 from pathlib import Path
