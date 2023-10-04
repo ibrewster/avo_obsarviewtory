@@ -16,22 +16,31 @@ Then this tool can be run to do the following:
 3. Download processed inteferograms, crop them into the area-of-interest, and clean up those with low coherence or shifting frames
 4. Run MintPy processing for the prepared inteferograms
 
- 
-## Notebooks
-This tool contains 7 Notebooks for now:
-1.  [`avoobs_init.ipynb`](https://github.com/uafgeotools/avo_obsarviewtory/blob/main/avoobs_init.ipynb): This Notebook initializes the project by setting up the neccessary directory structures and parameters. It does the latter by saving parameters into data files that the other Notebooks can read. Running this Notebook will reset your data files.
-2. [`avoobs_routine_processing.ipynb`](https://github.com/uafgeotools/avo_obsarviewtory/blob/main/avoobs_main_processing.ipynb): This Notebook runs processing for all preset volcanoes. By design, this Notebook will be run weekly to keep generating the latest products. After running (which often takes days), we're now using [`avoobs_transfer.ipynb`](https://github.com/uafgeotools/avo_obsarviewtory/blob/main/avoobs_transfer.ipynb) to move the products files for easier transfering.
-3. [`avoobs_ifg_download.ipynb`](https://github.com/uafgeotools/avo_obsarviewtory/blob/main/avoobs_ifg_download.ipynb): This Notebook downloads interferograms from a given time range. This function was in `routine_processing` Notebook and is now seperated.
-4. [`avoobs_transfer.ipynb`](https://github.com/uafgeotools/avo_obsarviewtory/blob/main/avoobs_transfer.ipynb): This Notebook helps transfer product files after a routine processing or a ifg downnload is done.
-5. [`avoobs_update_check.ipynb`](https://github.com/uafgeotools/avo_obsarviewtory/blob/main/avoobs_update_check.ipynb): This Notebook checks if there are any new SLCs released by ASF. Known bug: [`asf_search`](https://github.com/asfadmin/Discovery-asf_search) ALWAYS fails for Sentinel-1 path-30-frame-420 and path-81-frame-166, and it sometimes fails for other paths.
-6. [`avoobs_select_processing.ipynb`](https://github.com/uafgeotools/avo_obsarviewtory/blob/main/avoobs_select_processing.ipynb): This Notebook allows the user to select a specific volcano (or specific volcanoes) and run a processing that has the described 4 steps.
-7. [`MintPy_Time_Series_Copy1.ipynb`](https://github.com/uafgeotools/avo_obsarviewtory/blob/main/MintPy_Time_Series_Copy1.ipynb): This Notebook runs a timeseries analysis for a given project with more detailed parameter settings. Usually when the routine processing fails, we can try this.
-
-And there is a `test.ipynb` that includes some simple functions.
-
 
 ## Dependencies:
-This project requires dependencies to comply, and all needed packages should be found from file [`insar_new.yml`](https://github.com/uafgeotools/avo_obsarviewtory/blob/main/insar_new.yml).
+- Python 3.10 or later is required due to the type annotations used in the routine_processing.py file. If an earlier version of python is required, modifications to the type annotations will be needed.
+- correct installation of the pykdtree library requires the OpenMP libraries to be installed at the system level.
+
+Most dependencies can be found in the requirements.txt file, and installed via the following commands:
+
+```sh
+export USE_OMP="probe"
+pip install numpy
+pip install --no-cache-dir --no-binary pykdtree -r requirements.txt
+```
+
+*** note
+[!IMPORTANT]
+numpy *does* need to be installed seperately _first_, otherwise gdal will not build/install correctly. The `--no-cache-dir` flag is used to make sure the version of gdal installed isn't a cached version _without_ numpy support, and the `--no-binary pykdtree` flag ensures that pykdtree is built with OpenMP support. Depending on your enviroment, these two flags may not be needed.
+***
+
+*** note
+If installing on an Apple Silicon machine, pygrib may need to be built from source as well, using the following command:
+```
+ECCODES_DIR=/opt/homebrew pip install --force-reinstall --no-binary pygrib pygrib
+```
+This assumes that you have used homebrew to install the eccodes library
+***
 
 Besides packages, another prerequisite is a completed local account configuration for Copernicus Climate Change Service. A tutorial on this could be found [here](https://github.com/Alex-Lewandowski/opensarlab-notebooks/blob/master/SAR_Training/English/Master/MintPy_Time_Series_From_Prepared_Data_Stack.ipynb), in the section "1. Add Your Climate Data Store (CDS) UID & API Key to the Pyaps3 Config", by [Alex-Lewandowski](https://github.com/Alex-Lewandowski).
 
