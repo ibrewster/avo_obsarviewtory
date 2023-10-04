@@ -73,8 +73,8 @@ class InSARProcessor:
             ) # this function checks updates AND submit requests to ASF
 
             ###########DEBUG######
-            if asf_flag == 0:
-                asf_flag = 1
+            #if asf_flag == 0:
+            #    asf_flag = 1
             ######################
 
             if asf_flag > 0:
@@ -166,7 +166,7 @@ class InSARProcessor:
 
     def run_mintpy(self, volcano, proj_downloads):
         # Make sure we're in a good directory so MintPy doesn't fail (seriously???)
-        os.chdir(self.processing_dir)
+        os.chdir(os.path.dirname(__file__))
 
         print('########CURRENT PROJECT########')
         project_name = volcano.volc_name + str(volcano.path)
@@ -231,6 +231,8 @@ class InSARProcessor:
 
     def upload_files(self):
         src = str(self.product_dir) + "/"
+        
+        # TODO: Remove "test/" from this path when ready to go live
         dst = 'geodesy@apps.avo.alaska.edu:/geodesy/data/test/'
         dst_port = 2200
         key_file = os.path.join(os.path.dirname(__file__), 'id_rsa')
