@@ -29,18 +29,17 @@ pip install numpy
 pip install --no-cache-dir --no-binary pykdtree -r requirements.txt
 ```
 
-***note
+::: Note
 [!IMPORTANT]
 numpy *does* need to be installed seperately _first_, otherwise gdal will not build/install correctly. The `--no-cache-dir` flag is used to make sure the version of gdal installed isn't a cached version _without_ numpy support, and the `--no-binary pykdtree` flag ensures that pykdtree is built with OpenMP support. Depending on your enviroment, these two flags may not be needed.
-***
+:::
 
-***note
-If installing on an Apple Silicon machine, pygrib may need to be built from source as well, using the following command:
-```
-ECCODES_DIR=/opt/homebrew pip install --force-reinstall --no-binary pygrib pygrib
-```
-This assumes that you have used homebrew to install the eccodes library
-***
+> [!NOTE]
+> If installing on an Apple Silicon machine, pygrib may need to be built from source as well, using the following command:
+> ```
+> ECCODES_DIR=/opt/homebrew pip install --force-reinstall --no-binary pygrib pygrib
+> ```
+> This assumes that you have used homebrew to install the eccodes library
 
 Besides packages, another prerequisite is a completed local account configuration for Copernicus Climate Change Service. A tutorial on this could be found [here](https://github.com/Alex-Lewandowski/opensarlab-notebooks/blob/master/SAR_Training/English/Master/MintPy_Time_Series_From_Prepared_Data_Stack.ipynb), in the section "1. Add Your Climate Data Store (CDS) UID & API Key to the Pyaps3 Config", by [Alex-Lewandowski](https://github.com/Alex-Lewandowski).
 
