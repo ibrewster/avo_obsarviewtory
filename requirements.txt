@@ -6,6 +6,4 @@ python-dateutil
 asf_search
 requests
 matplotlib
-ipython
-ipywidgets
 mintpy

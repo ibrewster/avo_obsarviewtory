@@ -75,7 +75,8 @@ class InSARProcessor:
         self,
         debug: bool = False,
         custom_asf : list | None = None,
-        custom_volc: list | None = None):
+        custom_volc: list | None = None, 
+        force: bool = False):
         """
         Parameters
         ----------
@@ -89,7 +90,11 @@ class InSARProcessor:
         custom_volc : list, optional
             If provided, a list of VolcanoArea objects as defined in
             config.py to be considered for processing. Overrides the
-            default config.volcano_list (default: None)        
+            default config.volcano_list (default: None)
+        force : bool, optional
+            Force generation of product for all volcanoes associated
+            with selected ASF projects, regardless of if the project is
+            updated or not (default: False)
         """
         
         # List of succesfull and failed volcanoes/paths. 
@@ -122,6 +127,7 @@ class InSARProcessor:
         self._downloads = Path(self._download_dir.name)
         
         self._debug = debug
+        self._force = force
 
     def run(self) -> (list, list):
         """Run all processing steps, excluding file transfer to server
@@ -163,12 +169,11 @@ class InSARProcessor:
                 self._hyp3
             ) # this function checks updates AND submit requests to ASF
 
-            ###########DEBUG######
-            # To process ALL volcanoes, regardless of ASF project status
-            # uncomment the following two lines:
-            if asf_flag == 0:
+            
+            # If the force flag is set, mark all volcanoes for 
+            # generation, unless the ASF project check failed.
+            if self._force and asf_flag == 0:
                 asf_flag = 1
-            ######################
 
             if asf_flag > 0:
                 # We requested an update of a project, so mark that we 

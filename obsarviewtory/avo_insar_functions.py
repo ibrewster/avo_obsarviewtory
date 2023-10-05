@@ -2,10 +2,10 @@
 import numpy as np
 try:
     # Running as a script
-    import asf_notebook as asfn
+    import asf_notebook_trim as asfn
 except ImportError:
     # running as a module
-    from . import asf_notebook as asfn
+    from . import asf_notebook_trim as asfn
 
 from osgeo import gdal
 from pathlib import Path

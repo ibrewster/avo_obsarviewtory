@@ -21,7 +21,7 @@ if __name__ == "__main__":
         config.path81_166
     ]    
 
-    processor = InSARProcessor(debug = True, custom_asf = asf_list)
+    processor = InSARProcessor(debug = True, custom_asf = asf_list, force = True)
     successful, failed = processor.run()
     # processor.upload_files()
 
