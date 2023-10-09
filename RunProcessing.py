@@ -19,9 +19,9 @@ if __name__ == "__main__":
         config.path44_410,
         config.path50_182,
         config.path81_166
-    ]    
+    ]
 
-    processor = InSARProcessor(debug = True, custom_asf = asf_list, force = True)
+    processor = InSARProcessor(debug=True, custom_asf=asf_list, force=True)
     successful, failed = processor.run()
     # processor.upload_files()
 
@@ -48,4 +48,4 @@ if __name__ == "__main__":
     for s in successful:
         print(" - ", s)
     print("#################################################")
-    print(f"Run complete at {datetime.now().strftime('%m/%d/%y %H:%M')}")    
+    print(f"Run complete at {datetime.now().strftime('%m/%d/%y %H:%M')}")

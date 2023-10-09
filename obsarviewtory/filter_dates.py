@@ -1,11 +1,13 @@
-# scenes to be removed, usually due to shifted frames or bad coherence
+# scenes to be ignored, usually due to shifted frames or bad coherence
 # if a volcano has no bad scenes then this filter_dates list will be empty
 # currently we are defining one filter_dates list for each volcano that needs it
 
-# these scenes get downloaded and then deleted in processing. This is a waste and may be fixed in the future.
+# These scenes will be downloaded, as they may be valid for
+# a different volcano. However, they will not be used when
+# processing the specified volcano and path
 # Dictionary Key is the volc_name, path tuple.
 filter_dates = {
-    ('seguam',15): [
+    ('seguam', 15): [
         "S1AA_20160422T173706_20160516T173708_VVP024_INT80_G_weF_60A3",
         "S1AA_20160422T173734_20160516T173735_VVP024_INT80_G_weF_540A",
         "S1AA_20160422T173706_20160609T173709_VVP048_INT80_G_weF_CFF3",
@@ -35,7 +37,7 @@ filter_dates = {
         "S1BB_20161013T173638_20161106T173638_VVP024_INT80_G_weF_B9C9"
     ],
 
-    ('kiska',30): [
+    ('kiska', 30): [
         "S1AA_20180624T181853_20180811T181855_VVP048_INT80_G_ueF_219B",
         "S1AA_20180706T181853_20180811T181855_VVP036_INT80_G_ueF_0CA3",
         "S1AA_20180718T181854_20180811T181855_VVP024_INT80_G_ueF_5F24",
@@ -46,13 +48,13 @@ filter_dates = {
         "S1AA_20180811T181855_20180928T181857_VVP048_INT80_G_ueF_B216"
     ],
 
-    ('akutan',44): [
+    ('akutan', 44): [
         "S1AA_20181104T172032_20181116T172032_VVP012_INT80_G_weF_F5C6",
         "S1AB_20160915T172019_20161015T171938_VVP030_INT80_G_weF_55A6",
         "S1BB_20161015T171938_20161108T171937_VVP024_INT80_G_weF_3EFB",
     ],
 
-    ('okmok',44): [
+    ('okmok', 44): [
         'S1AA_20160424T172039_20160518T172040_VVP024_INT80_G_weF_ED6C',
         'S1AA_20160424T172039_20160611T172042_VVP048_INT80_G_weF_521D',
         'S1AA_20160518T172040_20160611T172042_VVP024_INT80_G_weF_0A92',
@@ -122,12 +124,12 @@ filter_dates = {
         'S1AA_20220429T172116_20220827T172123_VVP120_INT80_G_weF_AD63'
     ],
 
-    ('edgecumbe',50): [
+    ('edgecumbe', 50): [
         'S1AA_20230719T170441_20230731T170442_VVR012_INT80_G_weF_B020',
         'S1AA_20220817T170438_20230731T170442_VVR348_INT80_G_weF_6563'
     ],
 
-    ('takawangha',59): [
+    ('takawangha', 59): [
         "S1AA_20171005T180224_20181012T180231_VVP372_INT80_G_weF_9A18",
         "S1AA_20180322T180221_20180930T180230_VVP192_INT80_G_weF_A509",
         "S1AA_20180906T180230_20180930T180230_VVP024_INT80_G_weF_98B9",
@@ -141,7 +143,7 @@ filter_dates = {
         "S1AA_20181117T180230_20181129T180230_VVP012_INT80_G_weF_3A87"
     ],
 
-    ('kanaga',59): [
+    ('kanaga', 59): [
         "S1AA_20171005T180224_20181012T180231_VVP372_INT80_G_weF_9A18",
         "S1AA_20180322T180221_20180930T180230_VVP192_INT80_G_weF_A509",
         "S1AA_20180906T180230_20180930T180230_VVP024_INT80_G_weF_98B9",
@@ -155,7 +157,7 @@ filter_dates = {
         "S1AA_20181117T180230_20181129T180230_VVP012_INT80_G_weF_3A87"
     ],
 
-    ('amak',73): [
+    ('amak', 73): [
         "S1AA_20141010T170317_20141103T170318_VVP024_INT80_G_weF_CA5D",
         "S1AA_20141010T170317_20141127T170317_VVP048_INT80_G_weF_06B8",
         "S1AA_20141103T170318_20141127T170317_VVP024_INT80_G_weF_0748",
@@ -176,7 +178,7 @@ filter_dates = {
         "S1AA_20150806T170322_20150923T170341_VVP048_INT80_G_weF_BC61"
     ],
 
-    ('pavlof',73): [
+    ('pavlof', 73): [
         "S1AA_20141010T170317_20141103T170318_VVP024_INT80_G_weF_CA5D",
         "S1AA_20141010T170317_20141127T170317_VVP048_INT80_G_weF_06B8",
         "S1AA_20141103T170318_20141127T170317_VVP024_INT80_G_weF_0748",
@@ -206,7 +208,7 @@ filter_dates = {
         "S1BA_20161017T170247_20181106T170350_VVP750_INT80_G_weF_669E"
     ],
 
-    ('unimak',73): [
+    ('unimak', 73): [
         "S1AA_20150408T170343_20150502T170345_VVP024_INT80_G_weF_4DE3",
         "S1AA_20150713T170348_20150806T170349_VVP024_INT80_G_weF_71B1",
         "S1AA_20150408T170343_20150526T170346_VVP048_INT80_G_weF_017C",
@@ -229,7 +231,7 @@ filter_dates = {
         "S1AA_20150923T170341_20151017T170341_VVP024_INT80_G_weF_04E9"
     ],
 
-    ('edgecumbe',79): [
+    ('edgecumbe', 79): [
         'S1AA_20170305T023738_20170410T023739_VVP036_INT80_G_weF_CF4F',
         'S1AA_20170305T023738_20170422T023740_VVP048_INT80_G_weF_6DEA',
         'S1AA_20180312T023745_20180324T023745_VVP012_INT80_G_weF_D681',
@@ -267,7 +269,7 @@ filter_dates = {
         'S1AA_20230226T023815_20230310T023815_VVP012_INT80_G_weF_DA04'
     ],
 
-    ('ukinrek',102): [
+    ('ukinrek', 102): [
         "S1AA_20150317T164607_20150410T164608_VVP024_INT80_G_weF_BE7F",
         "S1AA_20150528T164611_20150621T164612_VVP024_INT80_G_weF_D572",
         "S1AA_20150317T164607_20150504T164609_VVP048_INT80_G_weF_9A03",
@@ -298,11 +300,11 @@ filter_dates = {
         "S1AB_20160919T164617_20161019T164539_VVP030_INT80_G_weF_CC7F"
     ],
 
-    ('cleveland',117): [
+    ('cleveland', 117): [
         "S1BB_20161020T172817_20161113T172817_VVP024_INT80_G_weF_4D7D"
     ],
 
-    ('vsevidof',117): [
+    ('vsevidof', 117): [
         "S1BB_20161020T172817_20161113T172817_VVP024_INT80_G_weF_4D7D"
     ],
 }
