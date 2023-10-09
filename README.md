@@ -1,7 +1,7 @@
 # avo_obsarviewtory
 
 
-This [Alaska Volcano Observatory](https://avo.alaska.edu/) (AVO) repository contains an integrated tool for analyzing [Sentinel-1](https://sentinel.esa.int/web/sentinel/missions/sentinel-1) Interferometric Synthetic Aperture Radar (InSAR) data of Alaska volcanoes. 
+This [Alaska Volcano Observatory](https://avo.alaska.edu/) (AVO) repository contains an integrated tool for analyzing [Sentinel-1](https://sentinel.esa.int/web/sentinel/missions/sentinel-1) Interferometric Synthetic Aperture Radar (InSAR) data of Alaska volcanoes.
 
 This tool uses the [Alaska Satellite Facility](https://asf.alaska.edu/)’s [Hybrid Pluggable Processing Pipeline](https://github.com/ASFHyP3/hyp3) (ASF HyP3) to search and download SAR data, and runs a small baseline subset analysis with [MintPy software](https://github.com/insarlab/MintPy). Such analysis contains the following steps:
 
@@ -31,10 +31,10 @@ pip install --no-cache-dir --no-binary pykdtree -r requirements.txt
 
 
 > [!IMPORTANT]
-> numpy *does* need to be installed seperately _first_, otherwise gdal will not build/install correctly. 
+> numpy *does* need to be installed seperately _first_, otherwise gdal will not build/install correctly.
 
 > [!NOTE]
-> The `--no-cache-dir` flag is used to make sure the version of gdal installed isn't a cached version _without_ numpy support, and the `--no-binary pykdtree` flag ensures that pykdtree is built with OpenMP support. Depending on your enviroment, these two flags may not be needed.
+> The `--no-cache-dir` flag is used to make sure the version of gdal installed isn't a cached version _without_ numpy support, and the `--no-binary pykdtree` flag - along with the `export` command - ensures that pykdtree is built with OpenMP support, dependant on the OpenMP libraries being available on the system. Depending on your enviroment, these two flags may not be needed.
 
 > [!NOTE]
 > If installing on an Apple Silicon machine, pygrib may need to be built from source as well, using the following command:
